@@ -1,4 +1,4 @@
-
+#!/usr/bin/env python3
 # from pyoma project
 
 from __future__ import unicode_literals, division
@@ -8,8 +8,10 @@ import os
 import errno
 import logging
 import re
-
+import argparse
+import sys
 logger = logging.getLogger(__name__)
+
 
 ## the only change compared to pyoma version is to remove int constratin on HOG id .
 
@@ -229,3 +231,17 @@ class OrthoXMLSplitter(object):
         tree.write(
             fn, xml_declaration=True, encoding="utf-8", method="xml", pretty_print=True
         )
+        
+### main
+def main(argv):
+    parser = argparse.ArgumentParser(description="Split OrthoXML file into HOGs")
+    parser.add_argument("-i", "--inFile", dest="inFile", required=True, help="OrthoXML file")
+    parser.add_argument("-o", "--outFile", dest="outFile", required=False, default='./splits/', help='split OrthoXML destination path')
+    args = parser.parse_args()
+
+    splitter = OrthoXMLSplitter(args.inFile, cache_dir=args.outFile)
+    splitter()
+
+if __name__ == '__main__':
+    main(sys.argv)
+
